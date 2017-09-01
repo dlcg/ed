@@ -1,6 +1,6 @@
 ---
 
-- hosts: Mon_PC
+- hosts: Tout
   tasks:
   - name: installe la derniere version de java 1.8.0 openjdk
     yum:

@@ -1,0 +1,8 @@
+---
+
+- hosts: Tout
+  tasks:
+  - name: Cree un LV pour acceuillir les données Cassandra
+    lvg:
+      vg: data
+      pvs: /dev/xdbh
