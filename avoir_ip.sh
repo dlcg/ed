@@ -7,3 +7,5 @@ aws ec2 describe-instances --filters "Name=vpc-id, Values="${VPC_ID}"" --query "
 sudo mv /etc/ansible/hosts{,.bak}
 sudo cp /home/ec2-user/ed/hosts /etc/ansible/hosts
 sudo sed  -i '1i [Tout]' /etc/ansible/hosts
+sudo ansible-playbook yum.yaml
+sudo ansible-playbook cassandra.yaml
