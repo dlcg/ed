@@ -9,4 +9,4 @@ sudo cp /home/ec2-user/ed/hosts /etc/ansible/hosts
 sudo sed -i '1i [Tout]' /etc/ansible/hosts
 sudo sed -i '62i host_key_checking = False' /etc/ansible/ansible.cfg
 sudo ansible-playbook /home/ec2-user/ed/yum.yaml
-sudo ansible-playbook /home/ec2-user/ed/cassandra.yaml
+sudo ansible-playbook /home/ec2-user/ed/volume.yaml
