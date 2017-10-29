@@ -55,7 +55,7 @@
       name: /etc/cassandra/conf/cassandra.yaml
       regexp: '^cluster_name:(.*)$'
       line: "cluster_name: 'hub_iot_dev'"
-  - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
+  - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter le hints.
     lineinfile:
       name: /etc/cassandra/conf/cassandra.yaml
       regexp: '^hints_directory:(.*)$'
@@ -68,15 +68,15 @@
   - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
     lineinfile:
       name: /etc/cassandra/conf/cassandra.yaml
-      regexp: '^(.*)- /var/lib/cassandra/commitlog(.*)$'
+      regexp: '^commitlog_directory(.*)$'
       line: 'commitlog_directory: /appli/cassandra/commitlog'
   - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
     lineinfile:
       name: /etc/cassandra/conf/cassandra.yaml
-      regexp: '^(.*)- /var/lib/cassandra/saved_caches(.*)$'
-      line: 'commitlog_directory: /appli/cassandra/saved_caches'
+      regexp: '^saved_caches_directory(.*)$'
+      line: 'saved_caches_directory: /appli/cassandra/saved_caches'
   - name: Ajoute le service pour qu il démarre au boot
     service:
       name: cassandra
       enabled: yes
-      state: yes
+      state: started 
