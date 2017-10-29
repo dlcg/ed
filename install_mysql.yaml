@@ -1,0 +1,40 @@
+---
+
+- hosts: mysql
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Installation du serveur mysql 
+    yum:
+      name: mysql57-server.x86_64
+      state: latest 
+  - name: Ajoute le service pour qu'il redémarre au boot
+    service:
+      name: mysqld
+      enabled: yes	
+      state: started
+  - name: Création du volume group data de 40G
+    lvg:
+      vg: data
+      pvs: /dev/xvdh
+  - name: Création du volume logique 
+    lvol:
+      vg: data
+      lv: data
+      size: 100%PVS
+  - name: Création du FS
+    filesystem:
+      fstype: ext4
+      dev: /dev/data/data
+  - name: Ajoute une entrée dans le fichier /etc/fstab
+    mount:
+      name: /srv
+      src: /dev/data/data
+      fstype: ext4
+      state: mounted
+  - name: cree un lien symobolique /srv /appli
+    file:
+      src: /srv
+      dest: /appli
+      state: link

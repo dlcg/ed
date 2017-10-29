@@ -1,0 +1,13 @@
+---
+- name: Slack Notification
+  become: yes
+  become_user: root
+  tasks:
+  - name: Envoi un message dans le canal slack
+    slack:
+      token: '{{ slack_token }}'
+      channel: "#connectlab"
+      domain: "transformation-edelia.slack.com"
+      parse: "full"
+      color: "good"
+      msg: '31337 ez mid'

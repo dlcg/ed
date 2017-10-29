@@ -1,0 +1,14 @@
+---
+
+- hosts: DEV
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Mise en place de l'ip forwarding si non présent
+    sysctl:
+       name: net.ipv4.ip_forward
+       value: 1
+       sysctl_set: yes
+       state: present
+       reload: yes

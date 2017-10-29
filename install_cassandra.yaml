@@ -1,0 +1,82 @@
+---
+
+- hosts: cassandra
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Création du dépôt Cassandra.
+    yum_repository:
+      name: cassandra
+      description: Apache cassandra
+      baseurl: https://www.apache.org/dist/cassandra/redhat/311x/
+      gpgcheck: yes
+      gpgkey: https://www.apache.org/dist/cassandra/KEYS
+      repo_gpgcheck: yes
+  - name: Installation des paquets Cassandra et cassandra-tools
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - cassandra
+      - cassandra-tools
+  - name: Création du volume data de 40G
+    lvg: 
+      vg: data
+      pvs: /dev/xvdh
+  - name: Création du volume logique
+    lvol:
+      vg: data
+      lv: data
+      size: 100%PVS
+  - name: Création du FS
+    filesystem:
+      fstype: ext4
+      dev: /dev/data/data
+  - name: Ajoute une entrée dans le fichier /etc/fstab
+    mount:
+      name: /srv
+      src: /dev/data/data
+      fstype: ext4
+      state: mounted
+  - name: cree un lien symobolique /srv /appli
+    file:
+      src: /srv
+      dest: /appli
+      state: link
+  - name: Crée le répertoire /appli/cassandra avec cassandra:cassandra en utilisateur:groupe
+    file:
+      path: /appli/cassandra
+      owner: cassandra
+      group: cassandra
+      state: directory
+  - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^cluster_name:(.*)$'
+      line: "cluster_name: 'hub_iot_dev'"
+  - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^hints_directory:(.*)$'
+      line: 'hints_directory: /appli/cassandra/hints'
+  - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^(.*)- /var/lib/cassandra/data(.*)$'
+      line: '    - /appli/cassandra/data'
+  - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^(.*)- /var/lib/cassandra/commitlog(.*)$'
+      line: 'commitlog_directory: /appli/cassandra/commitlog'
+  - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^(.*)- /var/lib/cassandra/saved_caches(.*)$'
+      line: 'commitlog_directory: /appli/cassandra/saved_caches'
+  - name: Ajoute le service pour qu il démarre au boot
+    service:
+      name: cassandra
+      enabled: yes
+      state: yes

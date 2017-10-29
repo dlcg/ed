@@ -1,0 +1,15 @@
+---
+
+- hosts: DEV
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Mise en place des règles iptables. Si un fichier portant le même nom existe déjà il ne le remplace.
+    template: 
+       src: /home/eirik/ed/iptables
+       dest: /etc/sysconfig/iptables
+       owner: root
+       group: root
+       mode: 0644
+       force: no

@@ -1,0 +1,19 @@
+---
+
+- hosts: all 
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Mise à jour du système, installation d'openjdk 1.8.0 et suppression d'openjdk 1.7.0. 
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+     - '*'
+     - 'java-1.8.0-openjdk.x86_64'
+  - name: Supprime la version 1.7.0 d'openjdk
+    yum:
+      name: java-1.7.0-openjdk.x86_64
+      state: absent
+     

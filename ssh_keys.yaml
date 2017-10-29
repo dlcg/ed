@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Déploiement des clefs publique.
+    authorized_key:
+      user: "{{ item.user}}"
+      state: present
+      key: "{{ item.key }}"
+    with_items:
+      -  { user: 'edubreuil', key: "{{ lookup('file', '/home/eirik/ed/clef/edubreuil.pub') }}" }
+      -  { user: 'gvinson', key: "{{ lookup('file', '/home/eirik/ed/clef/gvinson.pub') }}" }
+      -  { user: 'indaw', key: "{{ lookup('file', '/home/eirik/ed/clef/indaw.pub') }}" }
+      -  { user: 'jmponsen', key: "{{ lookup('file', '/home/eirik/ed/clef/jmponsen.pub') }}" }
+      -  { user: 'lmolini', key: "{{ lookup('file', '/home/eirik/ed/clef/lmolini.pub') }}" }
+      -  { user: 'mtecourt', key: "{{ lookup('file', '/home/eirik/ed/clef/mtecourt.pub') }}" }
+      -  { user: 'nestrugo', key: "{{ lookup('file', '/home/eirik/ed/clef/nestrugo.pub') }}" }
+      -  { user: 'rbui', key: "{{ lookup('file', '/home/eirik/ed/clef/rbui.pub') }}" }
+      -  { user: 'sqasmi', key: "{{ lookup('file', '/home/eirik/ed/clef/sqasmi.pub') }}" }

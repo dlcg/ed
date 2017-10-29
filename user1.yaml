@@ -1,0 +1,29 @@
+---
+
+- hosts: all
+  remote_user: ec2-user 
+
+  become: true
+  become_user: root
+  tasks:
+  - name: création d'utilisateur test
+    vars:
+      ansible_ssh_private_key_file: "/home/eirik/connectlab.pem"
+    user:
+      name: "{{ item.name }}"
+      state : present
+      group: "{{ item.group }}"
+      groups: "{{item.groups }}"
+    with_items:
+      - { name: 'jmponsen', group: 'dev', groups: 'edelia' }
+      - { name: 'mtecourt', group: 'dev', groups: 'edelia' }	
+      - { name: 'sqasmi', group: 'dev', groups: 'edelia' }	
+      - { name: 'lmolini', group: 'dev', groups: 'edelia' }	
+      - { name: 'gvinson', group: 'dev', groups: 'edelia' }	
+      - { name: 'edubreuil', group: 'exploit', groups: 'wheel' }	
+      - { name: 'indaw', group: 'exploit', groups: 'wheel' }	
+      - { name: 'rbui', group: 'rect', groups: 'edelia' }	
+      - { name: 'nestrugo', group: 'rect', groups: 'edelia' }	
+      - { name: 'edelia', group: 'edelia', groups: '' }
+
+ 

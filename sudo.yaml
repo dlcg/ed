@@ -1,0 +1,16 @@
+---
+- hosts: bastion hub_iot
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Décommenter la ligne dans visudo permettant au groupe wheel de passer root
+    lineinfile:
+      name: /etc/sudoers     
+      regexp: '^# %wheel ALL=(ALL)       NOPASSWD: ALL' 
+      line: '%wheel ALL=(ALL)       NOPASSWD: ALL' 
+      state: present
+  - name: Dans /etc/sudoers donner les droits sudo au groupe Edelia
+    lineinfile:
+      name: /etc/sudoers
+      line: '%edelia ALL=(edelia) NOPASSWD: ALL' 

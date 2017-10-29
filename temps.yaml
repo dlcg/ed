@@ -1,0 +1,16 @@
+---
+
+- hosts: all 
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Supprime fichier /etc/localtime
+    file:
+      path: '/etc/localtime'
+      state: absent
+  - name: cree un lien symobolique /usr/share/zoneinfo/Europe/Paris /etc/localtime
+    file:
+      src: /usr/share/zoneinfo/Europe/Paris
+      dest: /etc/localtime
+      state: link
