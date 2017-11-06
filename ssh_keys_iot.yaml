@@ -17,3 +17,5 @@
       -  { user: 'lmolini', key: "{{ lookup('file', '/home/eirik/ed/clef/lmolini.pub') }}" }
       -  { user: 'mtecourt', key: "{{ lookup('file', '/home/eirik/ed/clef/mtecourt_iot.pub') }}" }
       -  { user: 'sqasmi', key: "{{ lookup('file', '/home/eirik/ed/clef/sqasmi.pub') }}" }
+      -  { user: 'melsanharawi', key: "{{ lookup('file', '/home/eirik/ed/clef/melsanharawi.pub') }}" }
+      -  { user: 'qbisson', key: "{{ lookup('file', '/home/eirik/ed/clef/qbisson.pub') }}" }

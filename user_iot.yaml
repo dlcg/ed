@@ -20,5 +20,7 @@
       - { name: 'edubreuil', group: 'exploit', groups: 'wheel' }	
       - { name: 'indaw', group: 'exploit', groups: 'wheel' }	
       - { name: 'edelia', group: 'edelia', groups: '' }
+      - { name: 'melsanharawi', group: 'dev', groups: 'edelia' }
+      - { name: 'qbisson', group: 'dev', groups: 'edelia' }
 
  

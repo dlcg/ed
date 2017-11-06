@@ -1,0 +1,100 @@
+---
+
+- hosts: bastion
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Installe les paquets prérequis à openvpn 
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - epel-release
+      - openvpn
+      - wget
+      - openssl
+      - ca-certificates
+  - name: Télécharge easy-rsa
+    unarchive:
+      src: https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.3/EasyRSA-3.0.3.tgz
+      dest: /etc/openvpn
+      remote_src: yes
+  - name: renomme le répertoire en easy-rsa
+    command: mv  -fn /etc/openvpn/EasyRSA-3.0.3 /etc/openvpn/easy-rsa
+  - name: Positionne root:root pour le répertoire /etc/openvn/easy-rsa
+    file:
+      path: /etc/openvpn/easy-rsa
+      owner: root
+      group: root
+      recurse: yes
+      state: directory
+  - name: Execute easy-rsa pour produire les certificats
+    command: "{{ item }}"
+    with_items:
+      - /etc/openvpn/easy-rsa/easyrsa init-pki
+      - /etc/openvpn/easy-rsa/easyrsa --batch build-ca nopass
+      - /etc/openvpn/easy-rsa/easyrsa gen-dh
+      - /etc/openvpn/easy-rsa/easyrsa build-server-full server nopass
+      - /etc/openvpn/easy-rsa/easyrsa build-client-full chef nopass
+      - /etc/openvpn/easy-rsa/easyrsa gen-crl
+  - name: copie les fichiers produits dans /etc/openvpn/easy-rsa
+    command: cp -r pki /etc/openvpn/easy-rsa
+    args:
+     chdir: /home/ec2-user 
+  - name: copie les fichiers produits dans /etc/openvpn
+    command: cp pki/ca.crt pki/private/ca.key pki/dh.pem pki/issued/server.crt pki/private/server.key /home/ec2-user/pki/crl.pem /etc/openvpn
+    args:
+     chdir: /etc/openvpn/easy-rsa
+  - name: change le propriètaire et le groupe du fichier /etc/openvpn/crl.pem
+    file:
+      path: /etc/openvpn/crl.pem
+      owner: nobody
+      group: nobody
+      state: file
+  - name: Produit une clef pour tl-auth
+    command: openvpn --genkey --secret /etc/openvpn/ta.key
+  - name: Copie le fichier server.conf dans le répertoire /etc/openvpn
+    copy:
+      src: /home/eirik/ed/server.conf
+      dest: /etc/openvpn/server.conf
+      owner: root
+      group: root
+  - name: Mise en place de l IP forwarding.
+    sysctl:
+       name: net.ipv4.ip_forward
+       value: 1
+       sysctl_set: yes
+       state: present
+       reload: yes
+  - name: Copie le fichier iptables dans /etc/syconfig
+    copy:
+      src: /home/eirik/ed/iptables
+      dest: /etc/sysconfig
+      owner: root
+      group: root
+  - name: Recharge le démon iptables
+    service:
+      name: iptables
+      state: started
+  - name: Copie le fichier client-common.txt dans /etc/openvpn
+    copy:
+      src: /home/eirik/ed/client-common.txt
+      dest: /etc/openvpn
+      owner: root
+      group: root
+  - name: Recharge le démon iptables
+    service:
+      name: openvpn
+      state: started
+  - name: Copie genere_cert.sh et mail.py dans /root
+    copy:
+      src: "{{ item }}"
+      dest: /root
+      owner: root
+      group: root
+      mode: 0700
+    with_items:
+      - /home/eirik/ed/genere_cert.sh
+      - /home/eirik/ed/mail.py
+      

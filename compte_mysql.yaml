@@ -1,0 +1,17 @@
+---
+
+- hosts: mysql
+  remote_user: ec2-user
+  become: true
+  become_user: root
+  tasks:
+  - name: Création des comptes mysql.
+    mysql_user:
+      name: eric
+      password: test12345
+      login_host: 10.0.10.20
+      login_user: root
+      login_password: test12345
+      host: 10.0.1.128
+      priv: '*.*:ALL,GRANT'
+      state: present 

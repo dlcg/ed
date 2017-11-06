@@ -9,6 +9,10 @@
     yum:
       name: mysql57-server.x86_64
       state: latest 
+  - name: Installation du module python-mysql
+    yum:
+      name: MySQL-python27.x86_64
+      state: latest
   - name: Ajoute le service pour qu'il redémarre au boot
     service:
       name: mysqld

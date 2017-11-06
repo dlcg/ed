@@ -63,7 +63,7 @@
   - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
     lineinfile:
       name: /etc/cassandra/conf/cassandra.yaml
-      regexp: '^(.*)- /var/lib/cassandra/data(.*)$'
+      regexp: '^    - /var/lib/cassandra/data(.*)$'
       line: '    - /appli/cassandra/data'
   - name: Edite le fichier /etc/cassandra/cassandra.yaml pour adapter certaines valeurs.
     lineinfile:
@@ -75,6 +75,21 @@
       name: /etc/cassandra/conf/cassandra.yaml
       regexp: '^saved_caches_directory(.*)$'
       line: 'saved_caches_directory: /appli/cassandra/saved_caches'
+  - name: Edite le fichier cassandra.yaml pour modifier la ligne seeds.
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^          - seeds:(.*)$'
+      line: '          - seeds: "10.0.10.21"'
+  - name: Edite le fichier cassandra.yaml pour modifier la ligne listen_adress.
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^listen_address(.*)$'
+      line: 'listen_address: 10.0.10.21'
+  - name: Edite le fichier cassandra.yaml pour modifier la ligne rpc_address
+    lineinfile:
+      name: /etc/cassandra/conf/cassandra.yaml
+      regexp: '^rpc_address(.*)$'
+      line: 'rpc_address: 10.0.10.21'
   - name: Ajoute le service pour qu il démarre au boot
     service:
       name: cassandra
