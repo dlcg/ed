@@ -17,5 +17,8 @@ echo "[mysql]" >> ${ANSIBLE}
 echo "${IP2}" >>  ${ANSIBLE}
 echo "[cassandra]" >> ${ANSIBLE}
 echo "${IP3}" >> ${ANSIBLE}
-
+echo "[locahost]" >> ${ANSIBLE}
+echo "127.0.0.1" >> ${ANSIBLE}
 sed -i 's/Hostname.*/Hostname '${IP}'/' ../ed/ssh.cfg
+sed -i 's/remote.*/remote '${IP}' 443/' ../ed/client-common.txt
+
