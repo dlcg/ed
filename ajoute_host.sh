@@ -18,3 +18,4 @@ echo "${IP2}" >>  ${ANSIBLE}
 echo "[cassandra]" >> ${ANSIBLE}
 echo "${IP3}" >> ${ANSIBLE}
 
+sed -i 's/Hostname.*/Hostname '${IP}'/' ../ed/ssh.cfg
